@@ -73,7 +73,7 @@ static int fbemu_getattr(const char *path, struct stat *stbuf,
 	} else if (strcmp(filename, CONTROL_FILENAME) == 0) {
 		stbuf->st_mode = S_IFREG | 0660;
 		stbuf->st_nlink = 1;
-		stbuf->st_size = 4096; // max of len
+		stbuf->st_size = 4096;	// max of len
 	} else {
 		res = -ENOENT;
 	}
@@ -115,11 +115,12 @@ static int fbemu_open(const char *path, struct fuse_file_info *fi)
 	return res;
 }
 
-static int fbemu_read_control(char *buf, size_t size) {
-	snprintf(buf,size,"xres: %d\nyres: %d\nbits: %d\nmemlen: %d\nlinelen: %d\n",
-			fbemu_vinfo.xres, fbemu_vinfo.yres,
-			fbemu_vinfo.bits_per_pixel ,fbemu_finfo.smem_len,
-			fbemu_finfo.line_length);
+static int fbemu_read_control(char *buf, size_t size)
+{
+	snprintf(buf, size,
+		 "xres: %d\nyres: %d\nbits: %d\nmemlen: %d\nlinelen: %d\n",
+		 fbemu_vinfo.xres, fbemu_vinfo.yres, fbemu_vinfo.bits_per_pixel,
+		 fbemu_finfo.smem_len, fbemu_finfo.line_length);
 	return strlen(buf);
 }
 
@@ -135,7 +136,7 @@ static int fbemu_read_device(char *buf, size_t size, off_t offset)
 		nr = 0;
 	}
 	if (nr > 0)
-		memcpy(buf,fbemu_buf+offset,nr);
+		memcpy(buf, fbemu_buf + offset, nr);
 	return nr;
 }
 
@@ -176,18 +177,18 @@ static int fbemu_write_control(const char *buf, size_t size)
 
 static int fbemu_write_device(const char *buf, size_t size, off_t offset)
 {
-        size_t nw = size;
-        if (offset < fbemu_finfo.smem_len) {
-                nw = fbemu_finfo.smem_len - offset;
+	size_t nw = size;
+	if (offset < fbemu_finfo.smem_len) {
+		nw = fbemu_finfo.smem_len - offset;
 		if (nw > size) {
 			nw = size;
 		}
-        } else {
-                nw = 0;
+	} else {
+		nw = 0;
 	}
-        if (nw > 0)
-                memcpy(fbemu_buf+offset,buf,nw);
-        return nw;
+	if (nw > 0)
+		memcpy(fbemu_buf + offset, buf, nw);
+	return nw;
 }
 
 static int fbemu_write(const char *path, const char *buf, size_t size,
