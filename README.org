@@ -1,0 +1,11 @@
+* framebuffer emulate in userspace.
+
+** fbemu-fuse:
+
+Plan9 style driver, not have ioctl.
+
+#+BEGIN_SRC text
+  - fbemufs
+  +-- ctl         # use for get/set info
+  +-- data        # framebuffer's memory region
+#+END_SRC
